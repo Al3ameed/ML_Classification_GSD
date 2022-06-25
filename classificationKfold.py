@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from pandas.core.dtypes.common import is_numeric_dtype, is_string_dtype
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import  cross_val_score
+from sklearn.model_selection import cross_val_score, StratifiedKFold, KFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import LabelEncoder
@@ -91,10 +91,10 @@ model_pipeline = [
 ]
 model_list = ['Logistic Regression', 'SVM', 'KNN', 'Decision Tree', 'Random Forest', 'Naive Bayes']
 for model in model_pipeline:
-    accuracy = np.mean(cross_val_score(model, X, Y, scoring='accuracy'))
-    auc = np.mean(cross_val_score(model, X, Y, scoring='roc_auc'))
-    recall = np.mean(cross_val_score(model, X, Y, scoring='recall'))
-    precision = np.mean(cross_val_score(model, X, Y, scoring='precision'))
+    accuracy = np.mean(cross_val_score(model, X, Y, scoring='accuracy', cv=StratifiedKFold(n_splits=5)))
+    auc = np.mean(cross_val_score(model, X, Y, scoring='roc_auc', cv=StratifiedKFold(n_splits=5)))
+    recall = np.mean(cross_val_score(model, X, Y, scoring='recall', cv=StratifiedKFold(n_splits=5)))
+    precision = np.mean(cross_val_score(model, X, Y, scoring='precision', cv=StratifiedKFold(n_splits=5)))
     results = results.append({
         "Model": model,
         "Accuracy": accuracy,
